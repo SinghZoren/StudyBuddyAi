@@ -1,0 +1,352 @@
+/* Apply Poppins font globally */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Full screen container */
+.container {
+    height: 100vh;
+    max-width: 100%;
+    margin: 0;
+    padding: 20px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    box-shadow: none;
+}
+
+/* Header styling */
+h1 {
+    text-align: center;
+    color: #4a90e2;
+    font-weight: 600;
+    margin: 10px 0 20px 0;
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Toggle styling */
+.toggle-label {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    padding: 0 20px;
+}
+
+/* Chat box styling */
+.chat-box {
+    flex: 1;
+    border: 1px solid rgba(221, 221, 221, 0.3);
+    border-radius: 12px;
+    background-color: #ffffff;
+    padding: 20px;
+    margin: 0 20px 20px 20px;
+    overflow-y: auto;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Improved scrollbar for chat box */
+.chat-box::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-box::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.chat-box::-webkit-scrollbar-thumb:hover {
+    background: #757575;
+}
+
+/* Message styling */
+.chat-message {
+    margin-bottom: 20px;
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* User message styling */
+.chat-message.user {
+    text-align: right;
+    padding-left: 20%;
+}
+
+.chat-message.user .bubble {
+    background-color: #e9f5ff;
+    color: #000;
+    border-radius: 18px 18px 0 18px;
+    padding: 12px 18px;
+    display: inline-block;
+    max-width: 80%;
+    word-wrap: break-word;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Bot message styling */
+.chat-message.bot {
+    text-align: left;
+    padding-right: 20%;
+}
+
+.chat-message.bot .bubble {
+    background-color: #f9e9ff;
+    color: #000;
+    border-radius: 18px 18px 18px 0;
+    padding: 12px 18px;
+    display: inline-block;
+    max-width: 80%;
+    word-wrap: break-word;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+/* Input area styling */
+.chat-input {
+    display: flex;
+    gap: 15px;
+    padding: 20px;
+    background-color: #ffffff;
+    border-top: 1px solid rgba(221, 221, 221, 0.3);
+}
+
+textarea {
+    flex: 1;
+    padding: 15px;
+    border-radius: 25px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    height: 50px;
+    resize: none;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+textarea:focus {
+    outline: none;
+    border-color: #4a90e2;
+}
+
+button {
+    background-color: #4a90e2;
+    color: #fff;
+    padding: 0 25px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(74, 144, 226, 0.3);
+}
+
+button:hover {
+    background-color: #357ab8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(74, 144, 226, 0.4);
+}
+
+/* Math mode styling */
+#latex-input-container {
+    display: none;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 25px;
+    width: 100%;
+    position: relative;
+    min-height: 50px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+#mathquill-input {
+    width: 100%;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    padding: 10px;
+}
+
+/* Math action selector styling */
+#math-action-selector {
+    padding: 10px 15px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 25px;
+    background-color: #ffffff;
+    height: 50px;
+    min-width: 150px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background-position: right 15px center;
+    background-repeat: no-repeat;
+    background-size: 12px;
+    padding-right: 35px;
+}
+
+#math-action-selector:focus {
+    outline: none;
+    border-color: #4a90e2;
+}
+
+/* Dark mode adjustments */
+.dark-mode {
+    background-color: #121212;
+}
+
+.dark-mode .container {
+    background-color: #1c1c1c;
+}
+
+.dark-mode .chat-box {
+    background-color: #1c1c1c;
+}
+
+.dark-mode .chat-message.user .bubble {
+    background-color: #1e88e5;
+    color: #fff;
+}
+
+.dark-mode .chat-message.bot .bubble {
+    background-color: #6a1b9a;
+    color: #fff;
+}
+
+.dark-mode textarea,
+.dark-mode #latex-input-container,
+.dark-mode #math-action-selector {
+    background-color: #2d2d2d;
+    color: #fff;
+    border-color: #444;
+}
+
+.dark-mode .chat-input {
+    background-color: #1c1c1c;
+    border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Modal styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: #ffffff;
+    margin: 7% auto;
+    padding: 30px;
+    width: 400px;
+    border-radius: 15px;
+    position: relative;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+.dark-mode .modal-content {
+    background-color: #2d2d2d;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Auth buttons styling */
+#auth-button, #dark-mode-toggle {
+    position: fixed;
+    padding: 10px 20px;
+    border-radius: 25px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    cursor: pointer;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+#auth-button {
+    top: 20px;
+    left: 20px;
+}
+
+#dark-mode-toggle {
+    top: 20px;
+    right: 20px;
+}
+
+/* Visualization container styles */
+.visualization-wrapper {
+    position: relative;
+    margin: 20px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.visualization-wrapper:hover {
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.close-viz-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.9);
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 20px;
+    z-index: 100;
+    transition: all 0.2s ease;
+}
+
+.close-viz-btn:hover {
+    background: rgba(255,0,0,0.1);
+    border-color: #ff0000;
+    color: #ff0000;
+}
+
+/* Dark mode adjustments for visualizations */
+.dark-mode .visualization-wrapper {
+    background: #2d2d2d;
+    color: white;
+}
+
+.dark-mode .close-viz-btn {
+    background: rgba(45,45,45,0.9);
+    border-color: #444;
+    color: #fff;
+}
+
+.dark-mode .close-viz-btn:hover {
+    background: rgba(255,0,0,0.2);
+    border-color: #ff0000;
+    color: #ff0000;
+}

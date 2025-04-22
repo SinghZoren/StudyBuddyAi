@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Study Buddy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+    <!-- jQuery (required for MathQuill) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  
+    <!-- MathQuill -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.min.js"></script>
+  
+    <!-- React (Production) -->
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+  
+    <!-- Chart Dependencies -->
+    <script src="https://unpkg.com/prop-types@15.8.1/prop-types.min.js"></script>
+    <script src="https://unpkg.com/d3-scale@4.0.2/dist/d3-scale.min.js"></script>
+    <script src="https://unpkg.com/d3-array@3.2.4/dist/d3-array.min.js"></script>
+    <script src="https://unpkg.com/d3-shape@3.2.0/dist/d3-shape.min.js"></script>
+    
+    <!-- Use specific version of Recharts -->
+    <script src="https://unpkg.com/recharts@2.1.12/umd/Recharts.js"></script>
+  
+    <!-- Utility Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.4.4/math.min.js"></script>
+  
+    <!-- MathJax -->
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+    <!-- Initialize Chart Components -->
+    <script type="text/javascript">
+      // Make chart components available globally
+      
+      window.Chart = {
+        Line: Recharts.LineChart,
+        Bar: Recharts.BarChart,
+        Area: Recharts.AreaChart,
+        XAxis: Recharts.XAxis,
+        YAxis: Recharts.YAxis,
+        CartesianGrid: Recharts.CartesianGrid,
+        Tooltip: Recharts.Tooltip,
+        Legend: Recharts.Legend
+      };
+  
+      // Helper function for React components
+      window.createVisualizationComponent = function(code) {
+        const wrappedCode = `
+          const {
+            LineChart, BarChart, AreaChart,
+            Line, Bar, Area,
+            XAxis, YAxis,
+            CartesianGrid,
+            Tooltip, Legend
+          } = Recharts;
+          
+          ${code}
+        `;
+        
+        try {
+          return new Function(
+            'React',
+            'Recharts',
+            '_',
+            'math',
+            wrappedCode
+          )(React, Recharts, _, math);
+        } catch (error) {
+          console.error('Error creating visualization:', error);
+          throw error;
+        }
+      };
+    </script>
+  
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  </head>
+<body>
+  <!-- Dark Mode Toggle (top-right) -->
+  <button id="dark-mode-toggle" style="position: fixed; top: 20px; right: 20px;">
+    Dark Mode
+  </button>
+
+  <!-- Login/Register button (top-left) -->
+  <button id="auth-button" style="position: fixed; top: 20px; left: 20px;">
+    Login / Register
+  </button>
+
+  <div class="container">
+    <h1>Study Buddy</h1>
+    <label class="toggle-label">
+      Math Mode
+      <input type="checkbox" id="math-mode-toggle">
+    </label>
+
+    <!-- Main chat container -->
+    <div class="chat-box" id="chat-box"></div>
+
+    <!-- Visualization container -->
+    <div id="visualization-container" class="visualization-container"></div>
+
+    <div class="chat-input">
+      <div id="latex-input-container" style="display:none;">
+        <div class="dropdown-container">
+          <select id="math-action-selector">
+            <option value="">Select Action</option>
+            <option value="integrate">Integrate</option>
+            <option value="differentiate">Differentiate</option>
+            <option value="simplify">Simplify</option>
+            <option value="solve">Solve</option>
+            <option value="factorize">Factorize</option>
+            <option value="expand">Expand</option>
+            <option value="evaluate">Evaluate</option>
+            <option value="roots">Find Roots</option>
+            <option value="limits">Limits</option>
+            <option value="implicit-differentiate">Implicit Differentiation</option>
+            <option value="definite-integrate">Definite Integrate</option>
+            <option value="matrix">Matrix Operations</option>
+            <option value="partial-differentiate">Partial Differentiation</option>
+            <option value="critical-points">Find Critical Points</option>
+            <option value="series">Series Expansion</option>
+          </select>
+        </div>
+        <div id="mathquill-input" class="mathquill-editable"></div>
+      </div>
+      <textarea id="question-input" placeholder="Ask me anything... (Try asking for visualizations!)" rows="3"></textarea>
+      <button id="send-button">Send</button>
+    </div>
+  </div>
+
+  <!-- Auth Modal -->
+  <div id="auth-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div style="text-align:center; margin-bottom:10px;">
+        <button id="show-login" class="tab active">Login</button>
+        <button id="show-register" class="tab">Register</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div id="login-form" class="form-container">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" required>
+
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" required>
+
+        <!-- reCAPTCHA for login -->
+        <div id="recaptcha-login" class="g-recaptcha"
+             data-sitekey="YOUR_RECAPTCHA_SITE_KEY">
+        </div>
+
+        <button id="login-submit">Login</button>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <div id="register-form" class="form-container" style="display:none;">
+        <label for="reg-email">Email</label>
+        <input type="email" id="reg-email" required>
+
+        <label for="reg-password">Password</label>
+        <input type="password" id="reg-password" required>
+
+        <!-- Password Strength Bar Container -->
+        <div id="password-strength-bar-container">
+          <div id="password-strength-bar"></div>
+        </div>
+        <div id="password-strength-msg" style="margin-top:5px; font-size:14px;"></div>
+
+        <label for="reg-password2">Confirm Password</label>
+        <input type="password" id="reg-password2" required>
+
+        <!-- reCAPTCHA for register -->
+        <div id="recaptcha-register" class="g-recaptcha"
+             data-sitekey="YOUR_RECAPTCHA_SITE_KEY">
+        </div>
+
+        <button id="register-submit">Register</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/recharts/umd/Recharts.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.4.4/math.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathquill/0.10.1/mathquill.min.js"></script>
+  <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</body>
+</html>

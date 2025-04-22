@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathQuill Test</title>
+
+    <!-- MathQuill CSS -->
+    <link rel="stylesheet" href="/app/static/mathquill/mathquill.css">
+    <!-- Add some basic styling -->
+    <style>
+        #mathquill-input {
+            border: 1px solid #ccc;
+            padding: 5px;
+            width: 100%;
+            height: 40px;
+        }
+    </style>
+</head>
+<body>
+    <h1>MathQuill Test</h1>
+    <div id="mathquill-input" class="mathquill-editable"></div>
+
+    <!-- MathQuill JS -->
+    <script src="/app/static/mathquill/mathquill.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            if (typeof MathQuill === 'undefined') {
+                console.error("MathQuill is not loaded!");
+                return;
+            }
+
+            console.log("MathQuill successfully loaded.");
+
+            // Initialize MathQuill
+            const MQ = MathQuill.getInterface(2);
+            MQ.MathField(document.getElementById('mathquill-input'), {
+                spaceBehavesLikeTab: true,
+                handlers: {
+                    edit: function() {
+                        console.log("MathQuill input changed");
+                    },
+                },
+            });
+        });
+    </script>
+</body>
+</html>
